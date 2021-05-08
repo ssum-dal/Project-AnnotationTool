@@ -6,11 +6,12 @@ function Testing() {
     axios({
       url: "/images/download",
       method: "GET",
-      // responseType: "blob",
+      responseType: "blob",
     })
       .then((res) => {
+        console.log(res.blob());
         console.log(res.data.image);
-        const url = window.URL.createObjectURL(new Blob([res.data.image]));
+        const url = window.URL.createObjectURL(new Blob(res.data.image));
         console.log(url);
         const link = document.createElement("a");
         link.href = url;
