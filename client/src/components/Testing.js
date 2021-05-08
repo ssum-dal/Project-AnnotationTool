@@ -1,30 +1,29 @@
 import React from "react";
+import axios from "axios";
 
 function Testing() {
-  const download = () => {
-    var element = document.createElement("a");
-    var file = new Blob(
-      ["https://drive.google.com/uc?id=1vqE7bvY71WV2-dUKk-8f5HYruUern3aJ"],
-      {
-        type: "image/*",
-      }
-    );
-    const url = URL.createObjectURL(file);
-    element.href = url;
-    element.download = "image.jpg";
-    element.click();
-    URL.revokeObjectURL(url);
-  };
+  function download() {
+    axios({
+      url: "/images/download",
+      method: "GET",
+      // responseType: "blob",
+    })
+      .then((res) => {
+        console.log(res.data.image);
+        const url = window.URL.createObjectURL(new Blob([res.data.image]));
+        console.log(url);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "test.jpg");
+        document.body.appendChild(link);
+        link.click();
+      })
+      .catch((err) => console.log(err));
+  }
+
   return (
     <div>
-      <a
-        href="https://drive.google.com/uc?id=1vqE7bvY71WV2-dUKk-8f5HYruUern3aJ"
-        download
-        onClick={() => download()}
-      >
-        download
-      </a>
-      <button onClick={download}>download photo</button>
+      <button onClick={download}>Download</button>
     </div>
   );
 }

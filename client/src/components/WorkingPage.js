@@ -175,18 +175,21 @@ function WorkingPage() {
 
   // dir 자체를 선택하는 거 잘안나와서 우선 아무 파일이나 택하면 그 경로 선택하는 코드로 짬
   const downloadHandler = (e) => {
-    const input = document.getElementById("downloadDir");
-    const selectedFile = input.files[0];
-
-    const saveDir = selectedFile.webkitRelativePath.replace(
-      selectedFile.name,
-      ""
-    );
-
-    console.log(saveDir);
-
-    // 대충 이렇게 보내면 되지 않을까..? 경로...?
-    // axios.post("/images/download", saveDir).then((res) => res.data);
+    axios
+      .get("/images/download")
+      .then((res) => {
+        var element = document.createElement("a");
+        var file = new Blob([res.data.image], {
+          type: "image/*",
+        });
+        const url = URL.createObjectURL(file);
+        element.href = url;
+        console.log(url);
+        element.download = res.data.id + ".png";
+        element.click();
+        URL.revokeObjectURL(url);
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
