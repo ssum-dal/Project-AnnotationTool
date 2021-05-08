@@ -1,119 +1,24 @@
-// import React from "react";
-// import styled from "styled-components";
-
-// const onLoginHandler = (e) => {
-//   console.log("로그인");
-// };
-
-// const onLogoutHandler = (e) => {
-//   console.log("로그아웃");
-// };
-
-// function LoginPage() {
-//   return (
-//     <Wrapper>
-//       <ButtonArea>
-//         <Button onClick={onLoginHandler}>
-//             GitHub으로 로그인
-//           </a>
-//         </Button>
-//         <br />
-//         <Button onClick={onLogoutHandler}>로그아웃</Button>
-//       </ButtonArea>
-//     </Wrapper>
-//   );
-// }
-
-// const Wrapper = styled.div`
-//   display: flex;
-//   justify-content: center;
-// `;
-// const ButtonArea = styled.div`
-//   display: relative;
-// `;
-
-// const Button = styled.button`
-//   height: 30px;
-//   margin: 10px;
-// `;
-
-// export default LoginPage;
-
 import React, { useState, useEffect, useContext } from "react";
-import { Redirect } from "react-router-dom";
 import styled from "styled-components";
-import GithubIcon from "mdi-react/GithubIcon";
-import { AuthContext } from "../App";
+import kakaologo from "../img/kakao_login.png";
+import naverlogo from "../img/naver_login.png";
 
 export default function LoginPage() {
-  const { state, dispatch } = useContext(AuthContext);
-  const [data, setData] = useState({ errorMessage: "", isLoading: false });
-
-  const { client_id, redirect_uri } = state;
-
-  useEffect(() => {
-    // After requesting Github access, Github redirects back to your app with a code parameter
-    const url = window.location.href;
-    const hasCode = url.includes("?code=");
-
-    // If Github API returns the code parameter
-    if (hasCode) {
-      const newUrl = url.split("?code=");
-      window.history.pushState({}, null, newUrl[0]);
-      setData({ ...data, isLoading: true });
-
-      const requestData = {
-        code: newUrl[1],
-      };
-
-      const proxy_url = state.proxy_url;
-
-      // Use code parameter and other parameters to make POST request to proxy_server
-      fetch(proxy_url, {
-        method: "POST",
-        body: JSON.stringify(requestData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          dispatch({
-            type: "LOGIN",
-            payload: { user: data, isLoggedIn: true },
-          });
-        })
-        .catch((error) => {
-          setData({
-            isLoading: false,
-            errorMessage: "Sorry! Login failed",
-          });
-        });
-    }
-  }, [state, dispatch, data]);
-
-  if (state.isLoggedIn) {
-    return <Redirect to="/" />;
-  }
-
   return (
     <Wrapper>
       <section className="container">
         <div>
           <h1>Welcome</h1>
           <span>식대수비대 사랑해주세요~!</span>
-          <span>{data.errorMessage}</span>
           <div className="login-container">
-            {data.isLoading ? (
-              <div className="loader-container">
-                <div className="loader"></div>
-              </div>
-            ) : (
-              <>
-                <div className="App">
-                  <a href="http://localhost:4000/auth/github">
-                    <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />{" "}
-                  </a>
-                </div>
-              </>
-            )}
+            <div className="App">
+              <a href="http://localhost:4000/auth/kakao">
+                <img className="login-img" src={kakaologo} />
+              </a>
+              <a href="http://localhost:4000/auth/naver">
+                <img className="login-img" src={naverlogo} />
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -152,39 +57,17 @@ const Wrapper = styled.section`
         color: red;
       }
       .login-container {
-        background-color: #000;
         width: 70%;
         border-radius: 3px;
-        color: #fff;
         display: flex;
         align-items: center;
         justify-content: center;
-        > .login-link {
-          text-decoration: none;
-          color: #fff;
-          text-transform: uppercase;
-          cursor: default;
-          display: flex;
-          align-items: center;
-          height: 40px;
-          > span:nth-child(2) {
-            margin-left: 5px;
-          }
+        .login-img {
+          width: 200px;
+          height: 100px;
+          object-fit: contain;
         }
-        .loader-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 40px;
-        }
-        .loader {
-          border: 4px solid #f3f3f3;
-          border-top: 4px solid #3498db;
-          border-radius: 50%;
-          width: 12px;
-          height: 12px;
-          animation: spin 2s linear infinite;
-        }
+
         @keyframes spin {
           0% {
             transform: rotate(0deg);
