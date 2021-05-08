@@ -11,7 +11,7 @@ const USER_DETAIL = "/:id";
 const IMAGES = "/images";
 const UPLOAD = "/upload";
 const IMAGE_DETAIL = "/:id";
-const DOWNLOAD_IMAGE = "/:id/download";
+const DOWNLOAD_IMAGE = "/download";
 const DELETE_IMAGE = "/:id/delete"; //여러개 선택해야하니까 배열이어야..??
 
 // Github

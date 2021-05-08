@@ -13,8 +13,8 @@ const imageRouter = express.Router();
 
 imageRouter.get(routes.images, images);
 imageRouter.post(routes.upload, uploadImage, upload);
-imageRouter.get(routes.imageDetail, imageDetail);
 imageRouter.get(routes.downloadImage, downloadImage);
+imageRouter.get(routes.imageDetail, imageDetail);
 imageRouter.get(routes.deleteImage, deleteImage);
 
 export default imageRouter;
