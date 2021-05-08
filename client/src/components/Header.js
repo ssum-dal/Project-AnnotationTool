@@ -1,18 +1,11 @@
 import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 
-// const LoginButton = () => (
-//   <Item current={pathname === "/login"}>
-//     <SLink to="/login">Login</SLink>
-//   </Item>
-// );
-
-// const LogoutButton = () => (
-//   <Item>
-//     <SLink to="/logout">Logout</SLink>
-//   </Item>
-// );
+const logout = () => {
+  axios.get("/logout");
+};
 
 export default withRouter(({ location: { pathname } }) => (
   <Header>
@@ -31,8 +24,10 @@ export default withRouter(({ location: { pathname } }) => (
       <Item current={pathname === "/login"}>
         <SLink to="/login">Login</SLink>
       </Item>
-      <Item current={pathname === "/login"}>
-        <SLink to="/login">Logout</SLink>
+      <Item>
+        <SLink to="/" onClick={logout}>
+          Logout
+        </SLink>
       </Item>
     </LeftList>
   </Header>
