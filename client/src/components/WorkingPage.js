@@ -9,32 +9,52 @@ const initialProducts = {
 const initialFile = {
   src_array: [],
 };
+const inititalRect = {
+  id: [],
+  rect: [],
+  label: [],
+};
 
 let canvas,
   ctx,
   rect = {},
   drag = false,
   selectedImgView;
+let rectArr = [];
+
+const drawRect = (sx, sy, w, h) => {
+  ctx.setLineDash([]);
+  ctx.strokeStyle = "rgba(255, 0, 0, 0.7)";
+  ctx.strokeRect(sx, sy, w, h);
+};
+const drawAllRect = () => {
+  // rectArr 안에 있는 것들 전부 그려주기
+  rectArr.map((data) => {
+    drawRect(data.startX, data.startY, data.w, data.h);
+  });
+};
 
 const mouseDown = (e) => {
+  if (rectArr.length !== 0) drawAllRect();
   rect.startX = e.offsetX;
   rect.startY = e.offsetY;
   drag = true;
 };
 const mouseUp = (e) => {
+  if (rectArr.length !== 0) drawAllRect();
   rect.endX = e.offsetX;
   rect.endY = e.offsetY;
   drag = false;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.strokeStyle = "rgba(255, 0, 0, 1)";
   ctx.setLineDash([]);
   ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
-  //console.log("rect 값 : ", rect);
-
+  rectArr.push(rect);
   rect = {};
 };
 const mouseMove = (e) => {
   if (drag) {
+    if (rectArr.length !== 0) drawAllRect();
     rect.w = e.offsetX - rect.startX;
     rect.h = e.offsetY - rect.startY;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -44,8 +64,8 @@ const mouseMove = (e) => {
 const draw = () => {
   ctx.setLineDash([6]);
   ctx.fillStyle = "rgba(255, 0, 0, 0.1)";
-  ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
   ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
+  ctx.strokeStyle = "rgba(255, 0, 0, 0.5)";
   ctx.strokeRect(rect.startX, rect.startY, rect.w, rect.h);
 };
 
@@ -59,6 +79,7 @@ function WorkingPage() {
 
   useEffect(() => {
     loadImgList();
+    loadRectList();
   });
 
   useEffect(() => {
@@ -70,12 +91,13 @@ function WorkingPage() {
   }, []);
 
   const [FileUrl, setFileUrl] = useState(initialFile);
-  const [products, setProducts] = useState(initialProducts);
+  const [Products, setProducts] = useState(initialProducts);
+  const [RectInfo, setRectInfo] = useState(inititalRect);
 
   const loadImgList = () => {
-    var ul = document.getElementById("listdiv_ul");
+    var ul = document.getElementById("imglist_ul");
     ul.innerHTML = "";
-    products.image_array.map((data) => {
+    Products.image_array.map((data) => {
       const li = document.createElement("li");
       const btn = document.createElement("button");
       btn.innerText = "LOAD";
@@ -96,7 +118,7 @@ function WorkingPage() {
 
   const onMultipleImgHandler = (e) => {
     if (e.target.files) {
-      setProducts({ ...products, image_array: [...e.target.files] });
+      setProducts({ ...Products, image_array: [...e.target.files] });
     }
     // 자료형에 넣고 update는 한번만 해야함 ㅇㅇㅇㅇㅇㅇ 수정하지말고 새로운것 저장해야해서
     let tmpobj = { name: [], url: [] };
@@ -108,6 +130,25 @@ function WorkingPage() {
       tmpobj.url.push(imgUrl);
     }
     setFileUrl(tmpobj);
+  };
+
+  const saveHandler = () => {
+    let newobj = { id: [], rect: [], label: [] };
+    rectArr.forEach((currentValue, index) => {
+      newobj.id.push(index);
+      newobj.rect.push(currentValue);
+    });
+
+    setRectInfo({ id: [...newobj.id], rect: [...newobj.rect] });
+  };
+
+  const loadRectList = () => {
+    var ul = document.getElementById("Rectlist_ul");
+    ul.innerHTML = "";
+    const rectMap = new Map(Object.entries(RectInfo));
+    rectMap.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
   };
 
   // 현재 클릭한 버튼 이미지로 selectedImgView 업데이트
@@ -123,9 +164,9 @@ function WorkingPage() {
     console.log("multer 사용하여 파일 전송");
     e.preventDefault();
     const formData = new FormData();
-    products.image_array.map((data)=> {
+    Products.image_array.map((data) => {
       formData.append("image-files", data);
-    })
+    });
 
     console.log(formData.getAll("image-files"));
 
@@ -142,8 +183,10 @@ function WorkingPage() {
       ""
     );
 
+    console.log(saveDir);
+
     // 대충 이렇게 보내면 되지 않을까..? 경로...?
-    axios.post("/api/images/download", saveDir).then((res) => res.data);
+    // axios.post("/images/download", saveDir).then((res) => res.data);
   };
 
   return (
@@ -155,7 +198,7 @@ function WorkingPage() {
         </MainArea>
         <WorkRepos>
           <ListDiv>
-            <ul id="listdiv_ul"></ul>
+            <ul id="imglist_ul"></ul>
           </ListDiv>
           <Form
             action="/images/upload"
@@ -163,28 +206,20 @@ function WorkingPage() {
             enctype="multipart/form-data"
           >
             <BtnDiv>
-              <input type="file" name = "image-files" multiple onChange={onMultipleImgHandler} />
+              <input type="file" multiple onChange={onMultipleImgHandler} />
             </BtnDiv>
-            <button type="submit" onClick={uploadHandler}>
-              Upload
-            </button>
-
-            <input
-              id="downloadDir"
-              type="file"
-              directory=""
-              webkitdirectory=""
-              onChange={downloadHandler}
-            />
+            <BtnsDiv>
+              <button onClick={saveHandler}>Save BB</button>
+              <button type="submit" onClick={uploadHandler}>
+                Upload
+              </button>
+              <button onClick={downloadHandler}>Download</button>
+            </BtnsDiv>
           </Form>
         </WorkRepos>
         <Labels>
           <ListDiv>
-            <ol>
-              <li>Label1</li>
-              <li>Label2</li>
-              <li>...</li>
-            </ol>
+            <ul id="Rectlist_ul"></ul>
           </ListDiv>
           <BtnDiv>
             <input type="text" placeholder="Enter Label name"></input>
@@ -245,6 +280,10 @@ const ListDiv = styled.div`
 const BtnDiv = styled.div`
   position: relative;
   padding: 5px;
+`;
+
+const BtnsDiv = styled.div`
+  position: relative;
 `;
 
 const Labels = styled.div`

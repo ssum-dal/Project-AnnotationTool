@@ -44,7 +44,6 @@ import { Redirect } from "react-router-dom";
 import styled from "styled-components";
 import GithubIcon from "mdi-react/GithubIcon";
 import { AuthContext } from "../App";
-import axios from "axios";
 
 export default function LoginPage() {
   const { state, dispatch } = useContext(AuthContext);
@@ -108,12 +107,11 @@ export default function LoginPage() {
               </div>
             ) : (
               <>
-                {
-                  // Link to request GitHub access
-                }
                 <div className="App">
-      <a href="http://localhost:4000/auth/github"><img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" /> </a>
-    </div>
+                  <a href="http://localhost:4000/auth/github">
+                    <img src="//k.kakaocdn.net/14/dn/btqCn0WEmI3/nijroPfbpCa4at5EIsjyf0/o.jpg" />{" "}
+                  </a>
+                </div>
               </>
             )}
           </div>
