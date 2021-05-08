@@ -18,7 +18,7 @@ export const upload = async (req, res) => {
       return await newImage.save();
     })
   );
-  console.log("성공...?");
+  console.log("이미지 업로드");
   res.redirect(routes.home);
 };
 

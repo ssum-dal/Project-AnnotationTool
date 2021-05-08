@@ -14,7 +14,7 @@ const multerImage = multer({ storage: storage });
 
 export const localsMiddleware = (req, res, next) => {
   res.locals.routes = routes;
-  res.locals.user = isLogged;
+  res.locals.user = req.user || null;
   //console.log('출력합네다')
   //console.log(req.user)
   next();
