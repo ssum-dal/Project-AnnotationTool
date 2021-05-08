@@ -22,7 +22,7 @@ export const upload = async (req, res) => {
   res.redirect(routes.home);
 };
 
-export const downloadImage = (req, res) => res.send({'image' : "./src/imageServer/dal.png", 'id' : 'dal'});
+export const downloadImage = (req, res) => res.send({'image' : "https://drive.google.com/uc?id=1vqE7bvY71WV2-dUKk-8f5HYruUern3aJ", 'id' : 'dal'});
 
 export const imageDetail = (req, res) => res.send("Image Detail");
 export const deleteImage = (req, res) => res.send("Delete Image");
