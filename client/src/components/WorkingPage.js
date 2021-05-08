@@ -90,8 +90,11 @@ function WorkingPage() {
     canvas.addEventListener("mousemove", mouseMove);
   }, []);
 
+  // 이미지 실제로 보여주기 위해 url 저장함
   const [FileUrl, setFileUrl] = useState(initialFile);
+  // input으로 입력받은 data 전체 저장
   const [Products, setProducts] = useState(initialProducts);
+  // 유저가 그린 경계박스 값 저장
   const [RectInfo, setRectInfo] = useState(inititalRect);
 
   const loadImgList = () => {
@@ -168,8 +171,6 @@ function WorkingPage() {
       formData.append("image-files", data);
     });
 
-    console.log(formData.getAll("image-files"));
-
     axios.post("/images/upload", formData).then((res) => res.data);
   };
 
@@ -178,16 +179,7 @@ function WorkingPage() {
     axios
       .get("/images/download")
       .then((res) => {
-        var element = document.createElement("a");
-        var file = new Blob([res.data.image], {
-          type: "image/*",
-        });
-        const url = URL.createObjectURL(file);
-        element.href = url;
-        console.log(url);
-        element.download = res.data.id + ".png";
-        element.click();
-        URL.revokeObjectURL(url);
+        console.log("zip파일로 다운로드 성공 by 수민");
       })
       .catch((err) => console.log(err));
   };
