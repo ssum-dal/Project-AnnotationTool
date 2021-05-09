@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
+import { useFns, useUser } from "../context";
 import kakaologo from "../img/kakao_login.png";
 import naverlogo from "../img/naver_login.png";
 
 export default function LoginPage() {
+  const { logUserIn } = useFns();
+  const loginHandler = () => {
+    logUserIn();
+    // axios.get(/auth/kakao) 이런식으로 해서 완료된 결과값을 받아온 후 logUserIn해줘야함
+  };
   return (
     <Wrapper>
       <section className="container">
@@ -12,10 +18,10 @@ export default function LoginPage() {
           <span>식대수비대 사랑해주세요~!</span>
           <div className="login-container">
             <div className="App">
-              <a href="http://localhost:4000/auth/kakao">
+              <a href="http://localhost:4000/auth/kakao" onClick={loginHandler}>
                 <img className="login-img" src={kakaologo} />
               </a>
-              <a href="http://localhost:4000/auth/naver">
+              <a href="http://localhost:4000/auth/naver" onClick={loginHandler}>
                 <img className="login-img" src={naverlogo} />
               </a>
             </div>
