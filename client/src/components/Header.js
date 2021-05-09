@@ -2,36 +2,45 @@ import React from "react";
 import { Link, withRouter } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
+import { useUser } from "../context";
 
 const logout = () => {
   axios.get("/logout");
 };
 
-export default withRouter(({ location: { pathname } }) => (
-  <Header>
-    <List>
-      <Item current={pathname === "/"}>
-        <SLink to="/">Home</SLink>
-      </Item>
-      <Item current={pathname === "/work"}>
-        <SLink to="/work">Go Work!</SLink>
-      </Item>
-      <Item current={pathname === "/test"}>
-        <SLink to="/test">Test</SLink>
-      </Item>
-    </List>
-    <LeftList>
-      <Item current={pathname === "/login"}>
-        <SLink to="/login">Login</SLink>
-      </Item>
-      <Item>
-        <SLink to="/" onClick={logout}>
-          Logout
-        </SLink>
-      </Item>
-    </LeftList>
-  </Header>
-));
+export default withRouter(({ location: { pathname } }) => {
+  // loggedIn 여부에 따라 다르게 렌더링
+  const { name, loggedIn } = useUser();
+  return (
+    <Header>
+      <List>
+        <Item current={pathname === "/"}>
+          <SLink to="/">Home</SLink>
+        </Item>
+        <Item current={pathname === "/work"}>
+          <SLink to="/work">Go Work!</SLink>
+        </Item>
+        <Item current={pathname === "/test"}>
+          <SLink to="/test">Test</SLink>
+        </Item>
+      </List>
+      <LeftList>
+        <Span>Hello, {name}</Span>
+        {loggedIn ? (
+          <Item>
+            <SLink to="/" onClick={logout}>
+              Logout
+            </SLink>
+          </Item>
+        ) : (
+          <Item current={pathname === "/login"}>
+            <SLink to="/login">Login</SLink>
+          </Item>
+        )}
+      </LeftList>
+    </Header>
+  );
+});
 
 const Header = styled.header`
   position: fixed;
@@ -52,6 +61,12 @@ const List = styled.ul`
 const LeftList = styled.ul`
   display: flex;
   margin-left: auto;
+`;
+
+const Span = styled.span`
+  justify-content: center;
+  align-items: center;
+  display: flex;
 `;
 
 const Item = styled.li`

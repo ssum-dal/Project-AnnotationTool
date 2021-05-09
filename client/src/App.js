@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import GlobalStyles from "./components/GlobalStyles";
 import LandingPage from "./components/LandingPage";
@@ -7,21 +7,12 @@ import LoginPage from "./components/LoginPage";
 import Testing from "./components/Testing";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
-import { initialState, reducer } from "./components/store";
-
-export const AuthContext = createContext();
+import UserContextProvider from "./context";
 
 export default function App() {
-  const [state, dispatch] = useReducer(reducer, initialState);
   return (
     <>
-      <AuthContext.Provider
-        value={{
-          state,
-          dispatch,
-        }}
-      >
+      <UserContextProvider>
         <Router>
           <div>
             <Header />
@@ -34,7 +25,8 @@ export default function App() {
             <Footer />
           </div>
         </Router>
-      </AuthContext.Provider>
+      </UserContextProvider>
+
       <GlobalStyles />
     </>
   );
