@@ -3,7 +3,7 @@ import passport from "passport";
 import routes from "../routes";
 import { home } from "../controllers/imageController";
 import { logout, login,
-  githubLogin, postLogIn, naverLogin, kakaoLogin } from "../controllers/userController";
+  githubLogin, postLogIn, naverLogin, kakaoLogin, isLogged } from "../controllers/userController";
 import { onlyPublic, onlyPrivate } from "../middleware";
 
 const globalRouter = express.Router();
@@ -35,5 +35,7 @@ globalRouter.get(
   passport.authenticate('kakao', {failureRedirect: routes.login}),
   postLogIn
 );
+
+globalRouter.get(routes.authUser, isLogged);
 
 export default globalRouter;
