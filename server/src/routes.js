@@ -26,6 +26,8 @@ const NAVER_CALLBACK = "/auth/naver/callback";
 const KAKAO = "/auth/kakao";
 const KAKAO_CALLBACK = "/auth/kakao/callback";
 
+const AUTH_USER = "/auth/user";
+
 const routes = {
   home: HOME,
   login: LOGIN,
@@ -43,6 +45,7 @@ const routes = {
   naverCallback: NAVER_CALLBACK,
   kakao: KAKAO,
   kakaoCallback: KAKAO_CALLBACK,
+  authUser: AUTH_USER
 };
 
 export default routes;
