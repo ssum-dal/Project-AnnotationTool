@@ -1,22 +1,29 @@
 import multer from "multer";
+import multerS3 from "multer-s3";
+import aws from "aws-sdk";
 import routes from "./routes";
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./src/imageServer"); // cb 콜백함수를 통해 전송된 파일 저장 디렉토리 설정
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname); // cb 콜백함수를 통해 전송된 파일 이름 설정
-  },
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_KEY,
+  secretAccessKey: process.env.AWS_PRIVATE_KEY,
+  region: "ap-northeast-2"
 });
 
-const multerImage = multer({ storage: storage });
+
+const multerImage = multer({
+  storage: multerS3({
+      s3: s3,
+      bucket: 'project-annotation/test/origin',
+      acl: 'public-read',
+      key: function(req, file, cb){
+        cb(null, file.originalname); // 이름 설정
+      }
+  })
+},'NONE');
 
 export const localsMiddleware = (req, res, next) => {
   res.locals.routes = routes;
   res.locals.user = req.user || null;
-  //console.log('출력합네다')
-  //console.log(req.user)
   next();
 };
 

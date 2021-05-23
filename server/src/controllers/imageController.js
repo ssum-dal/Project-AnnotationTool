@@ -1,51 +1,63 @@
 import routes from "../routes";
 import Image from "../models/Image";
-import AdmZip from "adm-zip";
+import aws from "aws-sdk";
 import fs from "fs";
-import path_ from "path";
-var uploadDir = fs.readdirSync(__dirname+"/../imageServer"); 
+import s3Zip from "s3-zip";
+import path from "path";
+
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_KEY,
+  secretAccessKey: process.env.AWS_PRIVATE_KEY
+});
 
 export const home = (req, res) => {
-  //res.send("Home");
-  return res.sendFile(path_.join(`${__dirname}/../views/index.html`));
+
+  return res.sendFile(path.join(`${__dirname}/../views/index.html`));
+
 };
+
 export const images = (req, res) => res.send("Images");
 
 export const upload = async (req, res) => {
   Promise.all(
     req.files.map(async (file) => {
       const newImage = new Image({
-        fileUrl: file.path,
+        fileUrl: file.location,
       });
 
       return await newImage.save();
     })
   );
   console.log("이미지 업로드");
-  res.redirect(routes.home);
 };
 
 export const downloadImage = (req, res) => {
-  const zip = new AdmZip();
+  /*res.setHeader("content-type", "some/type");
 
-  for(var i = 0; i < uploadDir.length;i++){
-    zip.addLocalFile(__dirname+"/../imageServer/"+uploadDir[i]);
-}
+  const params = {
+    Bucket : "project-annotation/test",
+    Key: "dal.png"
+  };
+  
+  var stream = s3.getObject(params).createReadStream("dal.png");
+  stream.pipe(res);*/
+  const region = "ap-northeast-2";
+  const bucket = "project-annotation";
+  const folder =  "test/";
+  const file1 = "dal.png";
+  const file2 = "dal2.png";
+  const file3 = "go.png";
 
-  // Define zip file name
-  const downloadName = `${Date.now()}.zip`;
+  res.set('content-type', 'application/zip')
 
-  const data = zip.toBuffer(); 
+  //const output = fs.createWriteStream(path.join(__dirname, 'hahahah.zip'));
 
-  // save file zip in root directory
-  zip.writeZip(__dirname+"/../"+downloadName);
+  s3Zip
+  .archive({ s3 : s3, bucket: bucket}, folder, [file1, file2, file3])
+  .pipe(res)
 
-  // code to download zip file
+  //res.redirect(routes.home);
 
-  res.set('Content-Type','application/octet-stream');
-  res.set('Content-Disposition',`attachment; filename=${downloadName}`);
-  res.set('Content-Length',data.length);
-  res.send(data);
 }
 
 export const imageDetail = (req, res) => res.send("Image Detail");
