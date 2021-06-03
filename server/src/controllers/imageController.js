@@ -21,13 +21,15 @@ export const images = (req, res) => res.send("Images");
 export const upload = async (req, res) => {
   Promise.all(
     req.files.map(async (file) => {
+      
       const newImage = new Image({
         fileUrl: file.location,
+        fileName: file.originalname
       });
-
       return await newImage.save();
     })
   );
+  res.json(req.files);//
   console.log("이미지 업로드");
 };
 
