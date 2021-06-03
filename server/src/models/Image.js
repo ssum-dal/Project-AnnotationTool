@@ -5,6 +5,10 @@ const imageSchema= new mongoose.Schema(
         fileUrl:{
             type: String,
             required: true
+        },
+        fileName:{
+            type: String,
+            required: true
         }
     }
 );
