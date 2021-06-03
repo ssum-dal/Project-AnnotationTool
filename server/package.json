@@ -25,7 +25,6 @@
     "passport-kakao": "^1.0.1",
     "passport-local-mongoose": "^6.1.0",
     "passport-naver": "^1.0.6",
-    "pug": "^3.0.2",
     "s3-zip": "^3.2.0"
   },
   "scripts": {
