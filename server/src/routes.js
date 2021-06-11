@@ -10,9 +10,8 @@ const USER_DETAIL = "/:id";
 // Images
 const IMAGES = "/images";
 const UPLOAD = "/upload";
-const IMAGE_DETAIL = "/:id";
 const DOWNLOAD_IMAGE = "/download";
-const DELETE_IMAGE = "/:id/delete"; //여러개 선택해야하니까 배열이어야..??
+const DELETE_IMAGE = "/delete"; //여러개 선택해야하니까 배열이어야..??
 
 // Github
 const GITHUB = "/auth/github";
@@ -36,7 +35,6 @@ const routes = {
   userDetail: USER_DETAIL,
   images: IMAGES,
   upload: UPLOAD,
-  imageDetail: IMAGE_DETAIL,
   downloadImage: DOWNLOAD_IMAGE,
   deleteImage: DELETE_IMAGE,
   gitHub: GITHUB,
