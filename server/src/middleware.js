@@ -9,7 +9,7 @@ const multerImage = multer({
       bucket: 'project-annotation/test/origin',
       acl: 'public-read',
       key: function(req, file, cb){
-        cb(null, file.originalname); // 이름 설정
+        cb(null, file.originalname);
       }
   })
 },'NONE');
